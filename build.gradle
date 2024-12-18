@@ -1,0 +1,48 @@
+plugins {
+	id 'java'
+}
+
+repositories {
+	mavenCentral()
+}
+
+ext {
+	junitPlatformVersion = '1.10.2'
+	junitJupiterVersion = '5.10.2'
+	assertJVersion = '3.24.2'
+	jqwikVersion = '1.8.5'
+}
+
+java {
+	sourceCompatibility = JavaVersion.VERSION_1_8
+	targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+compileTestJava {
+	options.compilerArgs += '-parameters'
+	options.encoding = 'UTF-8'
+}
+
+test {
+	useJUnitPlatform()
+
+	// To allow other naming conventions
+	include '**/*Properties.class'
+	include '**/*Examples.class'
+	include '**/*Test.class'
+	include '**/*Tests.class'
+}
+
+dependencies {
+	testImplementation("net.jqwik:jqwik:${jqwikVersion}")
+
+	// Fluent assertions library. You can use any other assertions instead.
+	testImplementation("org.assertj:assertj-core:${assertJVersion}")
+
+	// Optional but recommended to get annotation related API warnings, e.g. for @CheckReturnValue
+	compileOnly("org.jetbrains:annotations:23.0.0")
+}
+
+wrapper {
+	gradleVersion = '8.7'
+}
