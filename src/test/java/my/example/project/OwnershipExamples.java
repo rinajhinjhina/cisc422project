@@ -60,4 +60,50 @@ public class OwnershipExamples {
         Assertions.assertThat(o2.get()).isNull();
 
     }
+
+    @Example
+    void mutableBorrowingExample1() throws Exception {
+        Environment<String> main = new Environment<>();
+        Environment<String> changeFunction = new Environment<>();
+
+        MutableOwner<String> o1 = new MutableOwner<>("hello");
+        MutableOwner<String> o2 = new MutableOwner<>();
+
+        main.add(o1);
+        changeFunction.add(o2);
+
+        EnvStack<String> envStack = new EnvStack<>();
+        envStack.push(main);
+        envStack.push(changeFunction);
+
+        o2.borrow(o1);
+
+        o2.mutate(o2.get() + " world");
+        Assertions.assertThat(o1.get()).isEqualTo("hello world");
+        Assertions.assertThat(o2.get()).isEqualTo("hello world");
+
+        envStack.pop();
+        Assertions.assertThat(o1.get()).isEqualTo("hello world");
+        Assertions.assertThat(o2.get()).isNull();
+    }
+
+    @Example
+    void mutableBorrowingExample2() throws Exception {
+        Environment<String> main = new Environment<>();
+
+        MutableOwner<String> o1 = new MutableOwner<>("hello");
+        MutableOwner<String> o2 = new MutableOwner<>();
+        MutableOwner<String> o3 = new MutableOwner<>();
+
+        main.add(o1);
+        main.add(o2);
+        main.add(o3);
+
+        EnvStack<String> envStack = new EnvStack<>();
+        envStack.push(main);
+
+        o2.borrow(o1);
+
+        Assertions.assertThatException().isThrownBy(() -> { o3.borrow(o1); });
+    }
 }

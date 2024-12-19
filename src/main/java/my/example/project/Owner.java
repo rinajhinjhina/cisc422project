@@ -2,8 +2,11 @@ package my.example.project;
 
 public abstract class Owner<T> {
     protected Value<T> val;
+    protected boolean hasBeenBorrowed;
 
-    public Owner() {}
+    public Owner() {
+        this.hasBeenBorrowed = false;
+    }
 
     public void takeOwnership(Owner<T> owner){
         this.val = owner.getValue();
@@ -12,6 +15,7 @@ public abstract class Owner<T> {
 
     public void release() {
         this.val = null;
+        this.hasBeenBorrowed = false;
     }
 
     public boolean isSet(){

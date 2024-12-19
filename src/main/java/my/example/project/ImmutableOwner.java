@@ -1,7 +1,7 @@
 package my.example.project;
 
 public class ImmutableOwner<T> extends Owner<T> {
-    private Value<T> immutablyBorrows;
+    private Owner<T> immutablyBorrowsFrom;
 
     public ImmutableOwner() {
         super();
@@ -9,11 +9,18 @@ public class ImmutableOwner<T> extends Owner<T> {
 
     public ImmutableOwner(T value) {
         super();
-        this.val = new Value<>(value, true);
+        boolean isImmutable = true;
+        this.val = new Value<>(value, isImmutable);
     }
 
     public boolean isSet(){
-        return this.val != null || this.immutablyBorrows != null;
+        return this.val != null || this.immutablyBorrowsFrom != null;
+    }
+
+    public void takeOwnership(Owner<T> owner){
+        this.val = owner.getValue();
+        this.val.setIsImmutable(true);
+        owner.release();
     }
 
     public void borrow(ImmutableOwner<T> owner) throws Exception {
@@ -21,19 +28,25 @@ public class ImmutableOwner<T> extends Owner<T> {
             throw new Exception("Cannot borrow a value if owning a value");
         }
 
-        this.immutablyBorrows = owner.getValue();
+        if(owner.val == null) {
+            throw new Exception("Cannot borrow a value if source is not set");
+        }
+
+        this.immutablyBorrowsFrom = owner;
+        owner.hasBeenBorrowed = true;
     }
 
     public void release() {
         this.val = null;
-        this.immutablyBorrows = null;
+        this.hasBeenBorrowed = false;
+        this.immutablyBorrowsFrom = null;
     }
 
     public T get() {
         if(this.val != null) {
             return val.get();
-        }else if(this.immutablyBorrows != null) {
-            return immutablyBorrows.get();
+        }else if(this.immutablyBorrowsFrom != null) {
+            return immutablyBorrowsFrom.get();
         }
 
         return null;

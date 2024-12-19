@@ -3,7 +3,6 @@ package my.example.project;
 public class Value<T> {
     private T value;
     private Boolean isImmutable;
-    private Boolean isMutablyBorrowed;
 
     public Value() {
     }
@@ -28,23 +27,11 @@ public class Value<T> {
         return this.value;
     }
 
-    public void lock() {
-        this.isImmutable = true;
-    }
-
-    public void unlock() {
-        this.isImmutable = false;
+    public void setIsImmutable(boolean isImmutable) {
+        this.isImmutable = isImmutable;
     }
 
     public boolean isImmutable() {
         return this.isImmutable;
-    }
-
-    public void setIsMutablyBorrowed(Boolean isMutablyBorrowed) {
-        this.isMutablyBorrowed = isMutablyBorrowed;
-    }
-
-    public Boolean getIsMutablyBorrowed() {
-        return this.isMutablyBorrowed;
     }
 }
