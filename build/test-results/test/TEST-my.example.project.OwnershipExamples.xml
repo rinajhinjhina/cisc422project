@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="my.example.project.OwnershipExamples" tests="1" skipped="0" failures="0" errors="0" timestamp="2024-12-19T04:37:29" hostname="RINA-ACER" time="0.165">
+<testsuite name="my.example.project.OwnershipExamples" tests="1" skipped="0" failures="0" errors="0" timestamp="2024-12-19T14:43:32" hostname="RINA-ACER" time="0.124">
   <properties/>
-  <testcase name="mutableBorrowingExample2" classname="my.example.project.OwnershipExamples" time="0.165"/>
+  <testcase name="danglingReferencesExample" classname="my.example.project.OwnershipExamples" time="0.124"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

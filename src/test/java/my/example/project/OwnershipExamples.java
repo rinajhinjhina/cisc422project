@@ -106,4 +106,22 @@ public class OwnershipExamples {
 
         Assertions.assertThatException().isThrownBy(() -> { o3.borrow(o1); });
     }
+
+    @Example
+    void danglingReferencesExample() throws Exception {
+        Environment<String> main = new Environment<>();
+        Environment<String> someFunction = new Environment<>();
+        ImmutableOwner<String> o1 = new ImmutableOwner<>();
+        ImmutableOwner<String> o2 = new ImmutableOwner<>("hello");
+
+        main.add(o1);
+        someFunction.add(o2);
+
+        EnvStack<String> envStack = new EnvStack<>();
+        envStack.push(main); // calling main
+        envStack.push(someFunction); // calling someFunction
+
+        envStack.pop();
+        Assertions.assertThatException().isThrownBy(() -> { o1.borrow(o2); });
+    }
 }
