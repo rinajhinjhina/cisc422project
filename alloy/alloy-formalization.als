@@ -49,6 +49,10 @@ fact {
 	// all values must have at least one owner
 	all v: Value | some o: Owner | owns[o, v]
 
+	// a variable cannot borrow itself
+	all io: ImmutableOwner | io.immutablyBorrowsFrom != io
+	all mo: MutableOwner | mo.mutablyBorrowsFrom != mo
+
 	// if a variable has mutable references in scope, 
 	//there cannot be another reference to the same variable in the same scope
 	some mo1, mo2: MutableOwner, e: Environment | all mo3: MutableOwner, io: ImmutableOwner 
