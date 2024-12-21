@@ -21,11 +21,6 @@ sig EnvStack {
 	stack: set Environment
 }
 
-
-pred move[o: Owner, v: Value]{
-	o.owns = v
-}
-
 pred immutablyBorrows[o1: ImmutableOwner, o2: Owner]{
 	o1.immutablyBorrowsFrom = o2
 }

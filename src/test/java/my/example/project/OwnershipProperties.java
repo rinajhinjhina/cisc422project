@@ -4,10 +4,8 @@ import java.util.*;
 
 import net.jqwik.api.*;
 import net.jqwik.api.arbitraries.ListArbitrary;
-import net.jqwik.api.constraints.*;
 import org.assertj.core.api.*;
 
-import static java.util.Arrays.*;
 
 class ImmutableOwnerBuilder {
     private String val;
@@ -125,6 +123,34 @@ public class OwnershipProperties {
                 }
             }
         }
+    }
+
+    // Variables are cleared at the end of a scope
+    @Property
+    void propertyCheckVariablesAreClearedAtEndOfScope(@ForAll("envStacksWithImmutableOwners") EnvStack<String> envStack) throws Exception {
+        Environment<String> bottomOfStack = envStack.getStack().firstElement();
+        Owner<String> rootVar = bottomOfStack.getVariables().get(0);
+
+        for(int i=1; i<bottomOfStack.getVariables().size(); i++) {
+            Owner<String> var = bottomOfStack.getVariables().get(i);
+            var.borrow(rootVar);
+        }
+
+        for(int i=1; i<envStack.getStack().size(); i++) {
+            for(Owner<String> var: envStack.getStack().get(i).getVariables()) {
+                var.borrow(rootVar);
+            }
+        }
+
+        for(int i=1; i<envStack.getStack().size(); i++) {
+            List<Owner<String>> listOfVariables = envStack.getStack().peek().getVariables();
+            envStack.pop();
+            for(Owner<String> var: listOfVariables) {
+                Assertions.assertThat(var.get()).isNull();
+            }
+        }
+
+
     }
     
     @Provide
