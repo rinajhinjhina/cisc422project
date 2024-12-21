@@ -2,18 +2,22 @@ package my.example.project;
 import java.util.Stack;
 
 public class EnvStack<T> {
-    Stack<Environment<T>> envStack;
+    private Stack<Environment<T>> envStack;
 
     public EnvStack() {
-        envStack = new Stack<>();
+        this.envStack = new Stack<>();
     }
 
     public void push(Environment<T> env) {
-        envStack.push(env);
+        this.envStack.push(env);
+    }
+
+    public Stack<Environment<T>> getStack(){
+        return this.envStack;
     }
 
     public Environment<T> pop() {
-        Environment<T> env = envStack.pop();
+        Environment<T> env = this.envStack.pop();
         env.clear();
         return env;
     }

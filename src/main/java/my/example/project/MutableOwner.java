@@ -1,7 +1,7 @@
 package my.example.project;
 
 public class MutableOwner<T> extends Owner<T> {
-    private MutableOwner<T> mutablyBorrowsFrom;
+    private Owner<T> mutablyBorrowsFrom;
 
     public MutableOwner() {
         super();
@@ -23,16 +23,13 @@ public class MutableOwner<T> extends Owner<T> {
         owner.release();
     }
 
-    public void borrow(MutableOwner<T> owner) throws Exception {
-        if(this.val != null) {
-            throw new Exception("Cannot borrow if owning a value");
-        }
-
+    public void borrow(Owner<T> owner) throws Exception {
         if(owner.hasBeenBorrowed){
             throw new Exception("Cannot mutably borrow a value that has already been borrowed in the same scope");
         }
 
         this.mutablyBorrowsFrom = owner;
+        this.val = null;
         owner.hasBeenBorrowed = true;
     }
 
@@ -53,10 +50,10 @@ public class MutableOwner<T> extends Owner<T> {
     }
 
     public void mutate(T value) throws Exception {
-        if(this.val != null) {
-            this.val.set(value);
-        }else if(this.mutablyBorrowsFrom != null) {
+        if(this.mutablyBorrowsFrom != null) {
             this.mutablyBorrowsFrom.val.set(value);
+        }else if(this.val != null) {
+            this.val.set(value);
         }else{
             throw new Exception("Cannot mutate if there is no value set");
         }

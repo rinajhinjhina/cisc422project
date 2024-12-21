@@ -36,4 +36,6 @@ public abstract class Owner<T> {
         }
         return this.getValue().get();
     }
+
+    public void borrow(Owner<T> owner) throws Exception {}
 }

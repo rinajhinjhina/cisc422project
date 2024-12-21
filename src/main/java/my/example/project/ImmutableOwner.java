@@ -23,16 +23,13 @@ public class ImmutableOwner<T> extends Owner<T> {
         owner.release();
     }
 
-    public void borrow(ImmutableOwner<T> owner) throws Exception {
-        if(this.val != null) {
-            throw new Exception("Cannot borrow a value if owning a value");
-        }
-
+    public void borrow(Owner<T> owner) throws Exception {
         if(owner.val == null) {
             throw new Exception("Cannot borrow a value if source is not set");
         }
 
         this.immutablyBorrowsFrom = owner;
+        this.val = null;
         owner.hasBeenBorrowed = true;
     }
 
@@ -43,10 +40,10 @@ public class ImmutableOwner<T> extends Owner<T> {
     }
 
     public T get() {
-        if(this.val != null) {
-            return val.get();
-        }else if(this.immutablyBorrowsFrom != null) {
+        if(this.immutablyBorrowsFrom != null) {
             return immutablyBorrowsFrom.get();
+        }else if(this.val != null) {
+            return val.get();
         }
 
         return null;
